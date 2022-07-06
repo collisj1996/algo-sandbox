@@ -1,9 +1,6 @@
 <script setup lang="ts">
 
-type NavItem = {
-  name: string,
-  route: string
-};
+import type { NavItem } from '../types/NavItem';
 
 const navItems: NavItem[] = [
   { name: 'Home', route: '/' },
