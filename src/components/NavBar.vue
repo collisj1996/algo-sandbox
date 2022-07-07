@@ -11,7 +11,7 @@ const navItems: NavItem[] = [
 
 <template>
   <div id="navbar-outer">
-    <img id="navbar-logo" src="./icons/logo-white.png" alt="logo" id="navbar-logo" />
+    <img id="navbar-logo" src="./icons/logo-white.png" alt="logo" />
     <div id="navbar-container">
       <router-link class="navbar-item" v-for="(navItem, index) in navItems" :key="index" :to="navItem.route">{{ navItem.name }}</router-link>
     </div>
