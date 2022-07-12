@@ -18,25 +18,23 @@ export default defineComponent({
       vueCanvasWidth: 500 as number,
       vueCanvasHeight: 500 as number,
       cellGrid: null as Cell[][] | null,
-      gridStep: 7 as number,
+      gridStep: 20 as number,
       paintMode: true as boolean,
       startCell: null as Cell | null,
       startCellPoint: null as [number, number] | null,
       endCell: null as Cell | null,
       endCellPoint: null as [number, number] | null,
       pathFinding: null as PathFinding | null,
+      delay: 50 as number,
     });
 
     return { ...toRefs(state) };
   },
   mounted() {
     this.init();
-    // test
-    this.startCellPoint = [0, 0];
-    this.endCellPoint = [6, 6];
     this.pathFinding = new PathFinding(this.cellGrid, this.startCellPoint, this.endCellPoint);
     const path = this.pathFinding.depthFirstSearch();
-    console.log(path);
+    this.drawPath(path);
   },
   methods: {
     init() {
@@ -46,6 +44,11 @@ export default defineComponent({
       this.linesCanvas = document.getElementById("lines-canvas") as HTMLCanvasElement;
       this.linesCanvasContext = this.linesCanvas.getContext("2d");
       this.updateAllCanvases(true);
+    },
+    runPathFinding() {
+      this.pathFinding = new PathFinding(this.cellGrid, this.startCellPoint, this.endCellPoint);
+      const path = this.pathFinding.depthFirstSearch();
+      this.drawPath(path);
     },
     generateCellGrid(randomNoise: number | null = null, loadTestData: boolean) {
       if(loadTestData) {
@@ -134,7 +137,7 @@ export default defineComponent({
       this.clearCanvasBackground();
       this.drawCanvasBackground();
       if(newGrid) {
-        this.generateCellGrid(0.2, true);
+        this.generateCellGrid(0.2, false);
       }
       this.drawCells();
     },
@@ -169,6 +172,7 @@ export default defineComponent({
         this.cellsCanvasContext.fillStyle = cell.wall ? "white" : "gray";
         cell.wall = !cell.wall;
         this.cellsCanvasContext?.fillRect(cell.x, cell.y, cellWidth, cellHeight);
+        this.pathFinding = new PathFinding(this.cellGrid, this.startCellPoint, this.endCellPoint);
       }
     },
     getCellFromCoordinates(x: number, y: number): Cell | null {
@@ -184,8 +188,22 @@ export default defineComponent({
 
       return this.cellGrid[i][j];
     },
+    async drawPath(pathArray: [number,number][]) {
+
+      const cellWidth = this.vueCanvasWidth / this.gridStep;
+      const cellHeight = this.vueCanvasHeight / this.gridStep;
+      
+      for(let i=0; i<pathArray.length - 1; i++) {
+        const currentCell = this.cellGrid[pathArray[i][1]][pathArray[i][0]];
+        this.cellsCanvasContext.fillStyle = "red";
+        this.cellsCanvasContext?.fillRect(currentCell.x, currentCell.y, cellWidth, cellHeight);
+        await timer(this.delay)
+      }
+    },
   }
 })
+
+const timer = ms => new Promise(res => setTimeout(res, ms));
 </script>
 
 <template>
@@ -197,8 +215,14 @@ export default defineComponent({
     <div id="settings-container">
       Grid Step
       <input type="number" v-model="gridStep" />
+      Delay
+      <input type="number" v-model="delay" />
       <button @click="updateAllCanvases(true)">Update Grid</button>
       <button @click="runPathFinding()">Run</button>
+    </div>
+    <div id="message-container">
+      <div class="message-paragraph">For grids of a grid step of 100, there is sometimes a maximum call stack size exceeded error.</div>
+      <div class="message-paragraph">Try a maximum grid step of 80 - 90 and a delay of 5.</div>
     </div>
   </div>
 </template>
@@ -216,6 +240,10 @@ export default defineComponent({
 #lines-canvas {
   position: absolute;
   pointer-events: none;
+}
+
+.message-paragraph {
+  margin: 10px;
 }
 </style>
  

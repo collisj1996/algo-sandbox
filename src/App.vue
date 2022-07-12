@@ -4,8 +4,10 @@ import NavBar from './components/NavBar.vue'
 </script>
 
 <template>
-  <NavBar />
-  <RouterView />
+  <div id="app-container">
+    <NavBar />
+    <RouterView />
+  </div>
 </template>
 
 <style>
@@ -16,6 +18,10 @@ import NavBar from './components/NavBar.vue'
   margin: 0 auto;
 
   font-weight: normal;
+}
+
+#app-container {
+  margin: 0 10%;
 }
 
 header {

@@ -79,7 +79,7 @@ export default class PathFinding {
     return [];
   }
 
-  depthFirstSearch(): [number,number][] {
+  depthFirstSearch(): [number,number][] | null {
 
     const { adjacentList } = this.graph;
     const stack = new Stack();
@@ -89,27 +89,30 @@ export default class PathFinding {
       visited.set(vertex, false);
     });
 
-    const path = [];
     const [firstPoint] = adjacentList.keys();
 
-    stack.push(firstPoint);
+    stack.push([firstPoint, [firstPoint]]);
 
     while(!stack.isEmpty()) {
-      const vertex = stack.pop();
+      const [vertex, path] = stack.pop();
 
-      if(vertex === this.endPoint) {
-        return stack.items;    
-      }
+      if(!visited.get(vertex)) {
 
-      if(visited.get(vertex)) {
+        if(vertex[0] === this.endPoint[0] && vertex[1] === this.endPoint[1]) {
+          return path;    
+        }
+
         visited.set(vertex, true);
-        stack.push(adjacentList.get(vertex))
+
+        const neighbours = adjacentList.get(vertex);
+
+        neighbours?.forEach((neighbour) => {
+          stack.push([neighbour, [ ...path, neighbour]]);
+        });
       }
     }
 
-    return [[]];
-
-    return [path];
+    return null;
   }
 
   dijkstra(): [number,number][] {

@@ -18,21 +18,4 @@ export default class Graph {
     this.adjacentList.get(destVertex)?.push(srcVertex);
   }
 
-  printGraph() {
-    const get_keys = this.adjacentList.keys();
-
-    for (const i of get_keys) {
-      const get_values = this.adjacentList.get(i);
-      let conc = "";
-
-      if(get_values) {
-        for (const j of get_values) {
-          conc += j + " ";
-        }
-      }
-
-      console.log(i + " -> " + conc);
-    }
-  }
-
 }
