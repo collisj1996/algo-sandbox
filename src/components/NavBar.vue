@@ -4,7 +4,7 @@ import type { NavItem } from '../types/NavItem';
 
 const navItems: NavItem[] = [
   { name: 'Home', route: '/' },
-  { name: 'Path Finding', route: '/path-finding' },
+  { name: 'Path Finding', route: '/' },
 ]
 
 </script>
