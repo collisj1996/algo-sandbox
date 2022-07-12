@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+// import { RouterLink, RouterView } from 'vue-router'
 import NavBar from './components/NavBar.vue'
+import PathFindingGrid from './components/PathFinding/PathFindingGrid.vue'
 </script>
 
 <template>
   <div id="app-container">
     <NavBar />
-    <RouterView />
+    <PathFindingGrid />
   </div>
 </template>
 
